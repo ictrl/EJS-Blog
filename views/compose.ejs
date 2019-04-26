@@ -1,0 +1,14 @@
+<%-include("header")-%>
+
+<h1>Compose</h1>
+
+<form action="/compose" method="post">
+<label>Title</label>
+    <input class="form-control" type="text" name="title" autofocus>
+<label>Post</label>
+<textarea name="body" class="form-control" rows="10" ></textarea>
+<br>
+    <button class="btn btn-lg btn-primary" type="submit">Publish</button>
+</form>
+
+<%-include("footer")-%>
