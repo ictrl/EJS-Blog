@@ -4,6 +4,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const _ = require("lodash");
+const mongoose = require("mongoose")
+
+mongoose.connect("mongodb+srv://admin:samrat.online@cluster0-wdtlh.mongodb.net/blogDB",{useNewUrlParser: true});
 
 const homeStartingContent = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et aspernatur illo non quae qui officia quod pariatur saepe? Unde molestias facere voluptatum, praesentium esse illum voluptatem vel est facilis optio dignissimos amet illo voluptatibus, sint eos doloremque rerum. Minus, nam? Quos, optio consequatur. Et, sint optio dolores doloremque voluptates eveniet neque ea explicabo quidem alias quae molestiae quis temporibus perspiciatis reiciendis accusamus error rerum vel modi ducimus quos accusantium. Odio, incidunt doloribus. In accusamus natus obcaecati repellendus veniam odit, expedita voluptatibus sunt quas, numquam ipsum. Maiores, animi! Nam asperiores beatae deserunt aperiam nulla excepturi obcaecati fuga veritatis, dicta rerum voluptatem?.";
 const aboutContent = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et aspernatur illo non quae qui officia quod pariatur saepe? Unde molestias facere voluptatum, praesentium esse illum voluptatem vel est facilis optio dignissimos amet illo voluptatibus, sint eos doloremque rerum. Minus, nam? Quos, optio consequatur. Et, sint optio dolores doloremque voluptates eveniet neque ea explicabo quidem alias quae molestiae quis temporibus perspiciatis reiciendis accusamus error rerum vel modi ducimus quos accusantium. Odio, incidunt doloribus. In accusamus natus obcaecati repellendus veniam odit, expedita voluptatibus sunt quas, numquam ipsum. Maiores, animi! Nam asperiores beatae deserunt aperiam nulla excepturi obcaecati fuga veritatis, dicta rerum voluptatem?.";
@@ -11,20 +14,32 @@ const contactContent = "Lorem ipsum dolor sit amet consectetur adipisicing elit.
 
 const app = express();
 
-let items = [];
+const postSchema = {
+  title : String,
+  content : String
+};
+
+const Post = mongoose.model("Post", postSchema);
 
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
 app.use(express.static("public"));
 
-app.get('/', function (req, res) {
-  res.render('home', {
+app.get("/", function(req,res){
+
+  Post.find({}, function(err, posts){
+
+  res.render("home", {
+
     content: homeStartingContent,
-    items: items,
-  });
+
+    posts: posts
+    });
+});
 });
 
 app.get('/about', function (req, res) {
@@ -44,27 +59,27 @@ app.get('/compose', function (req, res) {
 });
 
 app.post("/compose", function (req, res) {
-  const post = {
+  
+  const post = new Post({
     title: req.body.title,
     content: req.body.body
-  };
-
-  items.push(post);
-  res.redirect('/');
+  });   
+  post.save(function(err){
+    if (!err){
+      res.redirect("/");
+    }
+  });
 });
 
-app.get('/posts/:topic', function (req, res) {
-  const requestedTitle = _.lowerCase(req.params.topic);
-
-  items.forEach(function (item) {
-    const storedTitle = _.lowerCase(item.title);
-
-    if (storedTitle === requestedTitle) {
-      res.render('post', {
-        title: item.title,
-        content: item.content
-      })
-    }
+app.get('/posts/:postId', function (req, res) {
+  const requestedId = req.params.postId;
+  //  requestedId = requestedId.trim();
+  
+  Post.findOne({_id: requestedId}, function(err, item){
+    res.render("post", {
+      title: item.title,
+      content: item.content
+    });
   });
 });
 
