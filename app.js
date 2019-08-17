@@ -1,12 +1,12 @@
 //jshint esversion:6
-
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const _ = require("lodash");
 const mongoose = require("mongoose")
 
-mongoose.connect("mongodb+srv://admin:<password>@cluster0-wdtlh.mongodb.net/blogDB",{useNewUrlParser: true});
+mongoose.connect(process.env.MONGO_URI ,{useNewUrlParser: true});
 
 const homeStartingContent = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et aspernatur illo non quae qui officia quod pariatur saepe? Unde molestias facere voluptatum, praesentium esse illum voluptatem vel est facilis optio dignissimos amet illo voluptatibus, sint eos doloremque rerum. Minus, nam? Quos, optio consequatur. Et, sint optio dolores doloremque voluptates eveniet neque ea explicabo quidem alias quae molestiae quis temporibus perspiciatis reiciendis accusamus error rerum vel modi ducimus quos accusantium. Odio, incidunt doloribus. In accusamus natus obcaecati repellendus veniam odit, expedita voluptatibus sunt quas, numquam ipsum. Maiores, animi! Nam asperiores beatae deserunt aperiam nulla excepturi obcaecati fuga veritatis, dicta rerum voluptatem?.";
 const aboutContent = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et aspernatur illo non quae qui officia quod pariatur saepe? Unde molestias facere voluptatum, praesentium esse illum voluptatem vel est facilis optio dignissimos amet illo voluptatibus, sint eos doloremque rerum. Minus, nam? Quos, optio consequatur. Et, sint optio dolores doloremque voluptates eveniet neque ea explicabo quidem alias quae molestiae quis temporibus perspiciatis reiciendis accusamus error rerum vel modi ducimus quos accusantium. Odio, incidunt doloribus. In accusamus natus obcaecati repellendus veniam odit, expedita voluptatibus sunt quas, numquam ipsum. Maiores, animi! Nam asperiores beatae deserunt aperiam nulla excepturi obcaecati fuga veritatis, dicta rerum voluptatem?.";
